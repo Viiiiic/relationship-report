@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>一个人在信号满格的地方断了网</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif; background: #f5f5f0; color: #333; line-height: 2; padding: 40px 20px; }
+        .container { max-width: 680px; margin: 0 auto; background: #fff; padding: 50px 45px; box-shadow: 0 2px 20px rgba(0,0,0,0.06); }
+        .cover { text-align: center; padding: 60px 0 50px; border-bottom: 1px solid #e0e0e0; margin-bottom: 50px; }
+        .cover-type { font-size: 13px; color: #999; letter-spacing: 2px; margin-bottom: 30px; }
+        .cover h1 { font-size: 32px; font-weight: 500; color: #1a1a1a; letter-spacing: 1px; margin-bottom: 25px; }
+        .cover-line { width: 50px; height: 2px; background: #d4a373; margin: 0 auto 25px; }
+        .cover-sub { font-size: 14px; color: #888; }
+        h2 { font-size: 18px; font-weight: 500; color: #1a1a1a; margin: 50px 0 25px; padding-bottom: 12px; border-bottom: 1px solid #e8e8e8; }
+        h3 { font-size: 16px; font-weight: 500; color: #333; margin: 30px 0 12px; }
+        h4 { font-size: 14px; font-weight: 500; color: #666; margin: 20px 0 10px; }
+        p { font-size: 15px; color: #444; margin: 12px 0; text-align: justify; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+        th { background: #f8f8f8; color: #666; padding: 10px 12px; text-align: left; font-weight: 500; border-bottom: 2px solid #e0e0e0; }
+        td { padding: 10px 12px; border-bottom: 1px solid #f0f0f0; color: #444; }
+        blockquote { background: #f9f9f7; border-left: 3px solid #d4a373; padding: 15px 20px; margin: 20px 0; color: #555; font-size: 15px; }
+        .tag { display: inline-block; font-size: 12px; color: #888; background: #f5f5f5; padding: 3px 10px; border-radius: 3px; margin: 8px 5px 8px 0; }
+        .role { background: #fafafa; padding: 30px; margin: 25px 0; border-radius: 4px; }
+        .role h3 { margin-top: 0; }
+        .role p { font-size: 14px; color: #555; }
+        .bar-list { margin: 15px 0; }
+        .bar-item { display: flex; align-items: center; margin: 6px 0; font-size: 13px; }
+        .bar-label { width: 65px; color: #888; }
+        .bar-track { flex: 1; height: 6px; background: #eee; border-radius: 3px; margin: 0 10px; }
+        .bar-fill { height: 100%; border-radius: 3px; }
+        .bar-fill.red { background: #c9705a; }
+        .bar-fill.blue { background: #6a8fa3; }
+        .bar-value { width: 25px; color: #666; font-size: 12px; }
+        .cp { background: #1a1a1a; color: #fff; padding: 30px; margin: 25px 0; border-radius: 4px; }
+        .cp h3 { color: #fff; margin-top: 0; }
+        .cp-row { display: flex; margin: 8px 0; font-size: 14px; }
+        .cp-key { width: 80px; color: #d4a373; }
+        .cp-val { color: #ccc; }
+        .cp blockquote { background: rgba(255,255,255,0.05); border-left-color: #d4a373; color: #aaa; }
+        .path { padding: 25px; margin: 20px 0; border-radius: 4px; border-left: 3px solid; }
+        .path h3 { margin-top: 0; }
+        .path p { font-size: 14px; }
+        .path-1 { background: #f0f9f8; border-color: #5a9a94; }
+        .path-2 { background: #faf8f0; border-color: #c9a86c; }
+        .path-3 { background: #faf0f0; border-color: #c9705a; }
+        .prob { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 10px; margin-left: 8px; }
+        .prob-1 { background: #5a9a94; color: #fff; }
+        .prob-2 { background: #c9a86c; color: #fff; }
+        .prob-3 { background: #c9705a; color: #fff; }
+        .expert { padding: 25px; margin: 25px 0; background: #fafafa; border-radius: 4px; }
+        .expert h3 { margin-top: 0; }
+        .expert-label { font-size: 12px; color: #999; font-weight: normal; }
+        .expert ol { margin: 15px 0; padding-left: 20px; }
+        .expert li { font-size: 14px; color: #555; margin: 8px 0; }
+        .trash-section { text-align: center; padding: 35px; background: #fafafa; margin: 30px 0; border-radius: 4px; }
+        .trash-score { font-size: 42px; font-weight: 300; color: #333; letter-spacing: 2px; }
+        .trash-note { font-size: 13px; color: #999; margin-top: 8px; }
+        .footer { text-align: center; padding: 40px 0 20px; border-top: 1px solid #e8e8e8; margin-top: 50px; font-size: 12px; color: #999; }
+        .footer p { text-align: center; font-size: 12px; color: #bbb; }
+        @media (max-width: 600px) { .container { padding: 30px 20px; } .cover h1 { font-size: 24px; } }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="cover">
+        <div class="cover-type">虐心文艺片 · 情感悬疑</div>
+        <h1>一个人在信号满格的地方断了网</h1>
+        <div class="cover-line"></div>
+        <div class="cover-sub">关系分析报告</div>
+    </div>
+
+    <h2>关系总览</h2>
+    <table>
+        <tr><th>指标</th><th>分数</th><th>说明</th></tr>
+        <tr><td>关系健康指数</td><td>20/100</td><td>远低于及格线，关系正在持续消耗双方</td></tr>
+        <tr><td>CP 匹配度</td><td>25/100</td><td>需求模式严重错位，彼此的给予方式恰好是对方接收不到的频段</td></tr>
+        <tr><td>当前走向</td><td>22/100</td><td>如不干预，关系大概率在 3-6 个月内自然终结</td></tr>
+        <tr><td>可逆转度</td><td>45/100</td><td>窗口仍在，但正在关闭——需要双方同时主动介入</td></tr>
+    </table>
+
+    <h2>你们的故事</h2>
+    <p>她每一次靠近，都像是在信号满格的地方拨出一个永远无人接听的电话。他每一次回应，都像是用最低音量回了一句"在"。她在反复确认中耗尽了勇气，他在反复被追问中关上了仅存的窗口。</p>
+    <p>这不是一个关于爱不爱的故事——是两个人各自拿着半张地图，在同一座城市里越走越远的故事。</p>
+
+    <h2>角色登场</h2>
+
+    <div class="role">
+        <h3>焦虑型 · 信号追踪者</h3>
+        <span class="tag">#9 单向奔赴永动机</span>
+        <blockquote>在满格信号的地方反复拨号，每一声忙音都被她听成了"再试一次"</blockquote>
+        <p>在关系中你是那个永远在主动靠近的人，不是因为你不累，而是因为停下来比被拒绝更可怕。</p>
+        <div class="bar-list">
+            <div class="bar-item"><span class="bar-label">投入度</span><div class="bar-track"><div class="bar-fill red" style="width: 92%"></div></div><span class="bar-value">92</span></div>
+            <div class="bar-item"><span class="bar-label">安全感</span><div class="bar-track"><div class="bar-fill red" style="width: 15%"></div></div><span class="bar-value">15</span></div>
+            <div class="bar-item"><span class="bar-label">主导权</span><div class="bar-track"><div class="bar-fill red" style="width: 70%"></div></div><span class="bar-value">70</span></div>
+            <div class="bar-item"><span class="bar-label">情感表达</span><div class="bar-track"><div class="bar-fill red" style="width: 88%"></div></div><span class="bar-value">88</span></div>
+            <div class="bar-item"><span class="bar-label">边界感</span><div class="bar-track"><div class="bar-fill red" style="width: 18%"></div></div><span class="bar-value">18</span></div>
+            <div class="bar-item"><span class="bar-label">依恋安全度</span><div class="bar-track"><div class="bar-fill red" style="width: 12%"></div></div><span class="bar-value">12</span></div>
+            <div class="bar-item"><span class="bar-label">自我觉察</span><div class="bar-track"><div class="bar-fill red" style="width: 35%"></div></div><span class="bar-value">35</span></div>
+            <div class="bar-item"><span class="bar-label">关系修复力</span><div class="bar-track"><div class="bar-fill red" style="width: 40%"></div></div><span class="bar-value">40</span></div>
+        </div>
+        <p><strong>核心驱动力：</strong>被确认——"我需要你亲口告诉我，我在你心里有位置"</p>
+        <p><strong>习惯性循环：</strong>追问 → 敷衍回应 → 受挫 → 自我否定 → "算了" → 冷战 → 忍不住再靠近 → 继续追问</p>
+        <p><strong>隐藏恐惧：</strong>被遗弃——最深处害怕的不是他不爱，而是确认了他不爱之后，自己连"再试一次"的理由都没有了。</p>
+    </div>
+
+    <div class="role">
+        <h3>回避型 · 仙人掌园丁</h3>
+        <span class="tag">#10 勿扰模式</span>
+        <blockquote>他唯一会种的东西浑身是刺，但他真的以为那就是在好好照顾花园了</blockquote>
+        <p>在关系中你是那个永远觉得"我已经做了"的人，不是因为你不在乎，而是因为再多做一点你就不知道自己是谁了。</p>
+        <div class="bar-list">
+            <div class="bar-item"><span class="bar-label">投入度</span><div class="bar-track"><div class="bar-fill blue" style="width: 25%"></div></div><span class="bar-value">25</span></div>
+            <div class="bar-item"><span class="bar-label">安全感</span><div class="bar-track"><div class="bar-fill blue" style="width: 55%"></div></div><span class="bar-value">55</span></div>
+            <div class="bar-item"><span class="bar-label">主导权</span><div class="bar-track"><div class="bar-fill blue" style="width: 65%"></div></div><span class="bar-value">65</span></div>
+            <div class="bar-item"><span class="bar-label">情感表达</span><div class="bar-track"><div class="bar-fill blue" style="width: 10%"></div></div><span class="bar-value">10</span></div>
+            <div class="bar-item"><span class="bar-label">边界感</span><div class="bar-track"><div class="bar-fill blue" style="width: 72%"></div></div><span class="bar-value">72</span></div>
+            <div class="bar-item"><span class="bar-label">依恋安全度</span><div class="bar-track"><div class="bar-fill blue" style="width: 20%"></div></div><span class="bar-value">20</span></div>
+            <div class="bar-item"><span class="bar-label">自我觉察</span><div class="bar-track"><div class="bar-fill blue" style="width: 15%"></div></div><span class="bar-value">15</span></div>
+            <div class="bar-item"><span class="bar-label">关系修复力</span><div class="bar-track"><div class="bar-fill blue" style="width: 18%"></div></div><span class="bar-value">18</span></div>
+        </div>
+        <p><strong>核心驱动力：</strong>不被入侵——"别逼我说我做不到的事，让我安静待着就是我在爱你"</p>
+        <p><strong>习惯性循环：</strong>被追问 → 最低限度回应 → 对方不满 → 感到被指控 → 防御 → 撤退 → 冷战 → 过一两天发"吃了吗"回归最低限度</p>
+        <p><strong>隐藏恐惧：</b>被吞噬——最深处害怕的不是她离开，而是为了留住她必须交出自己仅有的城堡。</p>
+    </div>
+
+    <div class="cp">
+        <h3>你们的 CP 档案</h3>
+        <div class="cp-row"><span class="cp-key">CP 名</span><span class="cp-val">追逃无限循环组</span></div>
+        <div class="cp-row"><span class="cp-key">类型</span><span class="cp-val">消耗型 · 焦虑回避陷阱</span></div>
+        <div class="cp-row"><span class="cp-key">热度</span><span class="cp-val">2/5 —— 有余温但正在降温</span></div>
+        <table style="color: #ccc; margin-top: 20px;">
+            <tr><td>投入平衡度</td><td>15</td></tr>
+            <tr><td>安全感共振</td><td>10</td></tr>
+            <tr><td>主导权博弈</td><td>30</td></tr>
+            <tr><td>情感翻译率</td><td>12</td></tr>
+            <tr><td>边界协商力</td><td>8</td></tr>
+        </table>
+        <h4 style="color: #d4a373; margin-top: 25px;">CP 金句</h4>
+        <blockquote>女："我想要你在乎我，主动一点，让我感觉你是喜欢我的"<br>男："我已经在我的方式里表达了"<br>女："你的方式我感受不到"<br>男："那是你的问题"<br><br>——四句话完美闭合一个死循环。</blockquote>
+        <p><strong>走向：</strong>一个在沙漠找水的人碰上了只会种仙人掌的人。</p>
+    </div>
+
+    <h2>剧情走向</h2>
+    <div class="path path-1">
+        <h3>线路一 · 最佳结局 <span class="prob prob-1">10%</span></h3>
+        <p><strong>"仙人掌学会了浇水，信号塔学会了静音"</strong></p>
+        <p>需要双方各自做个体咨询 + 关系咨询。这条路存在，但它需要两个人同时愿意穿越各自最深的恐惧——她要学会不追，他要学会主动打开。这不是一个人能完成的工程。</p>
+    </div>
+    <div class="path path-2">
+        <h3>线路二 · 现实结局 <span class="prob prob-2">55%</span></h3>
+        <p><strong>"维持现状，直到她先累了"</strong></p>
+        <p>3-6 个月内，女方某次说的"算了"会变成真的。不是因为发生了什么重大冲突，而是因为某一天她突然发现，自己连生气的力气都没有了。</p>
+    </div>
+    <div class="path path-3">
+        <h3>线路三 · 最坏结局 <span class="prob prob-3">35%</span></h3>
+        <p><strong>"一个人删了聊天记录，另一个人甚至没发现"</strong></p>
+        <p>关系在沉默中消亡。没有爆发，没有告别，只是越来越长的已读不回，直到双方都默认这段关系已经不存在了。</p>
+    </div>
+
+    <h2>专家怎么看</h2>
+    <div class="expert">
+        <h3>依恋模式分析 <span class="expert-label">Amir Levine · 评分 18/100</span></h3>
+        <p>这段关系是教科书级别的"焦虑-回避陷阱"。</p>
+        <p>女方是典型的焦虑型依恋，她的每一个行为都是"抗议行为"的变体：反复追问是在索要确认，假性分手是在测试对方会不会追回来，发情感文案是在试探他会不会有反应，"算了"不是真的算了，是一种惩罚性退出。</p>
+        <p>男方是典型的回避型依恋，他的"去激活策略"一样清晰：回避给关系下定义，用最少的字数回应情感需求，将对方的亲密需求病理化。</p>
+        <p>问题在于：她越追，他越退；他越退，她越追。两个人锁在一个永动机里，每一轮循环都在消耗关系的最后一点存量。</p>
+    </div>
+
+    <div class="expert">
+        <h3>关系根源分析 <span class="expert-label">武志红 · 评分 22/100</span></h3>
+        <p>从权力结构看，这段关系的天平严重倾斜。女方把全部权力让渡给了男方——她的情绪、自我价值感、安全感全部挂在他的回应上。</p>
+        <p>女方在重复一个古老的模式：追逐 → 受挫 → 自我否定 → 再追逐。男方同样在重复模式：给最低限度 → 撤退 → 被拉回 → 再撤退。</p>
+        <p>她的深层需求是：被确认"我是值得被爱的"。他的深层需求是：在不失去自我边界的前提下被接纳。两个需求本身都是合理的——但在这段关系里，它们变成了互相对立的力量。</p>
+    </div>
+
+    <div class="expert">
+        <h3>你没看到的真相 <span class="expert-label">曾奇峰 · 评分 25/100</span></h3>
+        <h4>盲点一：他不是纯粹的回避</h4>
+        <p>一个真正的回避型不会在冷战后主动回来发"吃了吗"。他回来了，说明他内心有连接的需求——只是他的功能受限了，他能给出的最大值就是那句"吃了吗"。</p>
+        <h4>盲点二：女方的追问本身才是关系最大的破坏力</h4>
+        <p>她不是在寻求回应，她是在寻求一个永远无法满足的确认。无论对方给什么，她都会觉得不够，因为她真正需要的东西（"我值得被爱"的确认）不是任何外部回应能填满的。</p>
+        <h4>盲点三：渣度被高估了</h4>
+        <p>他的行为更像是被动退缩型的功能受限，而不是主动操控型的恶意。区分这两者很重要——前者可以通过成长改变，后者才是真正需要远离的。</p>
+        <blockquote>"一个在沙漠找水的人碰上了只会种仙人掌的人。她渴死了，他委屈死了——他觉得自己已经把最好的植物给她了。"</blockquote>
+    </div>
+
+    <div class="expert">
+        <h3>个人疗愈方向 <span class="expert-label">Nicole LePera · 评分 20/100</span></h3>
+        <p>从神经系统的角度看，两个人都不在自己的"容纳之窗"（Window of Tolerance）里。</p>
+        <p><strong>核心观点：</strong>这不是两个人在谈恋爱，这是两个旧创伤在碰撞。先做个体疗愈，再谈关系修复。</p>
+        <ol>
+            <li>识别触发时刻——学会觉察"我现在被触发了"，而不是直接行动</li>
+            <li>区分当下与旧伤——"他现在没回消息"和"我不值得被爱"是两件事</li>
+            <li>停止外包自我价值——你的价值不应该由他回不回消息来定义</li>
+            <li>建立每日安全基线——在关系之外建立稳定的自我调节系统</li>
+            <li>暂停关系分析，先做个体疗愈——不是所有问题都是"关系问题"</li>
+        </ol>
+    </div>
+
+    <div class="expert">
+        <h3>关系健康体检 <span class="expert-label">John Gottman · 评分 18/100</span></h3>
+        <p>Gottman 研究中预测关系终结的"四骑士"——在这段关系中全部到场。</p>
+        <table>
+            <tr><th>四骑士</th><th>表现</th><th>程度</th></tr>
+            <tr><td>批评</td><td>她批评他不够主动；他批评她"想太多""写作文"</td><td>双向</td></tr>
+            <tr><td>蔑视</td><td>"鸡汤""写作文"——把她的情感表达降格为矫情</td><td>男方为主</td></tr>
+            <tr><td>防御</td><td>两个人都在防御，没有人在真正"接住"对方的信号</td><td>高度双向</td></tr>
+            <tr><td>石墙</td><td>"嗯""好""那我也没办法了"——一堵切断修复可能的墙</td><td>男方为主</td></tr>
+        </table>
+        <p>正负互动比约为 1:5——而健康关系的标准是 5:1。完全倒置。</p>
+        <p><strong>预后判断：</strong>高风险。关系末期指标明显。</p>
+    </div>
+
+    <div class="expert">
+        <h3>关系的更大图景 <span class="expert-label">Esther Perel · 评分 22/100</span></h3>
+        <p>两套脚本都不是错的，但它们是不兼容的。当她用她的脚本去评判他的行为，她看到的是冷漠；当他用他的脚本去理解她的需求，他看到的是无理取闹。</p>
+        <p>最耐人寻味的是：<strong>他们在寻找同一件事</strong>。她在寻找"一个被选择的、值得被爱的自己"。他在寻找"一个被接受其本来面目的自己"。两个人都在寻找被接纳——但他们寻找的方式恰好互相阻碍。</p>
+        <blockquote>给她的一段话：<br><br>你一直在问错问题。你在向他索要的不是他的爱，是你自己的安全感。这个东西没有任何人能给你。如果你不再需要他来告诉你你值得被爱——如果你已经知道了——你还会在这段关系里吗？</blockquote>
+    </div>
+
+    <h2>渣度鉴定</h2>
+    <div class="trash-section">
+        <div class="trash-score">38/100</div>
+        <div class="trash-note">注意区</div>
+    </div>
+    <table>
+        <tr><th>类型</th><th>程度</th><th>说明</th></tr>
+        <tr><td>备胎收藏家</td><td>中度→裁决后降级</td><td>缺乏直接证据，更可能是社交惰性而非主动收割</td></tr>
+        <tr><td>责任逃避者</td><td>高度</td><td>"那是你的问题""那我也没办法了"——习惯性将关系责任推给对方</td></tr>
+        <tr><td>PUA 操控手</td><td>中度→裁决后降为轻度</td><td>存在轻度煤气灯效应，但更像是防御本能而非操控策略</td></tr>
+        <tr><td>冷暴力专家</td><td>中度</td><td>"嗯""好"式回应构成情感忽视，但是否构成"冷暴力"取决于主观意图</td></tr>
+    </table>
+    <p><strong>裁决结论：</strong>被动退缩型功能受限，非主动操控型恶意。</p>
+    <p>他不是那种会主动布局伤害你的人。他的"渣"不是精心设计的，而是功能缺失的。他不是不想给你更多——他可能真的不知道"更多"长什么样。</p>
+    <p>这不意味着你不会受伤。水龙头漏水和有人往你身上泼水，你身上都会湿。但知道区别很重要——它决定了你是该离开，还是该等他学会修水管。</p>
+    <blockquote><strong>童锦程点评：</strong><br>"不是所有渣男都会追你，有一种渣男就站在原地，等你自己跑过来，然后站着不动让你围着他转。"</blockquote>
+
+    <div class="footer">
+        <p>本报告由 6 位心理学视角交叉分析生成，旨在提供多元理解框架而非单一判断。</p>
+        <p>所有分析基于有限信息推演，不构成专业心理咨询意见。</p>
+        <p>如果你正在经历情感困扰，建议寻求专业心理咨询师的帮助。</p>
+    </div>
+</div>
+</body>
+</html>
