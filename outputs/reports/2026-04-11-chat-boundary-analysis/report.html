@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>他在另一个窗口里说“老婆” | 关系分析报告</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=ZCOOL+XiaoWei&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0d0d0d;
+      --bg-secondary: #151518;
+      --bg-card: #1c1c1f;
+      --bg-card-hover: #232326;
+      --text-primary: #e8e4df;
+      --text-secondary: #7a7672;
+      --text-muted: #4a4744;
+      --accent-coral: #e07a5f;
+      --accent-sage: #81b29a;
+      --accent-gold: #d4a373;
+      --accent-blue: #7a9eb8;
+      --border-subtle: rgba(255,255,255,0.06);
+      --border-accent: rgba(224, 122, 95, 0.3);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Space Mono', monospace; background: var(--bg-primary); color: var(--text-primary); min-height: 100vh; line-height: 1.8; }
+    .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 60px 24px; position: relative; overflow: hidden; }
+    .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 20% 30%, rgba(224, 122, 95, 0.08) 0%, transparent 50%), radial-gradient(ellipse at 80% 70%, rgba(129, 178, 154, 0.06) 0%, transparent 50%); pointer-events: none; }
+    .hero-badge { display: inline-block; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-muted); padding: 8px 20px; border: 1px solid var(--border-subtle); border-radius: 100px; margin-bottom: 40px; animation: fadeIn 1s ease-out 0.2s both; }
+    .hero-title { font-family: 'ZCOOL XiaoWei', 'Noto Serif SC', serif; font-size: clamp(36px, 8vw, 72px); font-weight: 400; letter-spacing: 4px; margin-bottom: 24px; animation: fadeIn 1s ease-out 0.4s both; }
+    .hero-title .highlight { color: var(--accent-coral); }
+    .hero-line { width: 60px; height: 1px; background: linear-gradient(90deg, transparent, var(--accent-gold), transparent); margin: 0 auto 24px; animation: fadeIn 1s ease-out 0.6s both; }
+    .hero-sub { font-size: 13px; color: var(--text-secondary); letter-spacing: 2px; animation: fadeIn 1s ease-out 0.8s both; }
+    .scroll-hint { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); font-size: 10px; letter-spacing: 2px; color: var(--text-muted); animation: bounce 2s ease-in-out infinite; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes bounce { 0%,100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(8px); } }
+    .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+    .section { padding: 80px 0; border-bottom: 1px solid var(--border-subtle); }
+    .section:last-child { border-bottom: none; }
+    .section-header { margin-bottom: 48px; }
+    .section-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent-coral); margin-bottom: 12px; }
+    .section-title { font-family: 'Noto Serif SC', serif; font-size: 28px; font-weight: 600; }
+    .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    @media (min-width: 768px) { .stats-grid { grid-template-columns: repeat(4, 1fr); } }
+    .stat-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 24px; transition: all 0.3s ease; }
+    .stat-card:hover { background: var(--bg-card-hover); border-color: var(--border-accent); }
+    .stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    .stat-value { font-family: 'Noto Serif SC', serif; font-size: 28px; font-weight: 700; margin-bottom: 4px; }
+    .stat-card:nth-child(1) .stat-value { color: var(--accent-coral); }
+    .stat-card:nth-child(2) .stat-value { color: var(--accent-sage); }
+    .stat-card:nth-child(3) .stat-value { color: var(--accent-gold); }
+    .stat-card:nth-child(4) .stat-value { color: var(--accent-blue); }
+    .stat-desc { font-size: 11px; color: var(--text-secondary); line-height: 1.5; }
+    .story-text { font-size: 15px; color: var(--text-secondary); line-height: 2; text-align: justify; }
+    .story-text + .story-text { margin-top: 20px; }
+    .character-grid { display: grid; gap: 24px; }
+    @media (min-width: 768px) { .character-grid { grid-template-columns: 1fr 1fr; } }
+    .character-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 16px; padding: 32px; position: relative; overflow: hidden; transition: all 0.3s ease; }
+    .character-card:hover { border-color: var(--border-accent); transform: translateY(-4px); }
+    .character-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+    .character-card:first-child::before { background: linear-gradient(90deg, var(--accent-coral), #f2a679); }
+    .character-card:last-child::before { background: linear-gradient(90deg, var(--accent-blue), #a8c5d9); }
+    .character-type { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+    .character-card:first-child .character-type { color: var(--accent-coral); }
+    .character-card:last-child .character-type { color: var(--accent-blue); }
+    .character-name { font-family: 'Noto Serif SC', serif; font-size: 20px; font-weight: 600; margin-bottom: 8px; }
+    .character-tag { display: inline-block; font-size: 11px; color: var(--text-muted); background: rgba(255,255,255,0.04); padding: 4px 10px; border-radius: 4px; margin-bottom: 16px; }
+    .character-quote { font-size: 13px; color: var(--text-secondary); font-style: italic; padding-left: 16px; border-left: 2px solid var(--accent-gold); margin-bottom: 20px; }
+    .radar-list { margin-bottom: 20px; }
+    .radar-item { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; font-size: 12px; }
+    .radar-label { width: 72px; color: var(--text-muted); }
+    .radar-track { flex: 1; height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden; }
+    .radar-fill { height: 100%; width: 0; border-radius: 2px; transition: width 1s ease-out; }
+    .character-card:first-child .radar-fill { background: linear-gradient(90deg, var(--accent-coral), #f2a679); }
+    .character-card:last-child .radar-fill { background: linear-gradient(90deg, var(--accent-blue), #a8c5d9); }
+    .radar-value { width: 24px; text-align: right; color: var(--text-secondary); }
+    .character-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.7; margin-top: 10px; }
+    .character-desc strong { color: var(--text-primary); }
+    .cp-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 16px; padding: 32px; margin-top: 32px; }
+    .cp-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; flex-wrap: wrap; gap: 16px; }
+    .cp-title { font-family: 'Noto Serif SC', serif; font-size: 20px; font-weight: 600; }
+    .cp-badge { font-size: 10px; letter-spacing: 1px; padding: 6px 12px; border-radius: 100px; background: rgba(224, 122, 95, 0.15); color: var(--accent-coral); }
+    .cp-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+    @media (min-width: 768px) { .cp-stats { grid-template-columns: repeat(5, 1fr); } }
+    .cp-stat { text-align: center; padding: 16px 8px; background: rgba(255,255,255,0.03); border-radius: 8px; }
+    .cp-stat-value { font-family: 'Noto Serif SC', serif; font-size: 24px; font-weight: 700; color: var(--accent-gold); margin-bottom: 4px; }
+    .cp-stat-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+    .cp-quote { background: rgba(255,255,255,0.03); border-radius: 8px; padding: 20px; font-size: 13px; color: var(--text-secondary); line-height: 1.8; }
+    .cp-quote-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-gold); margin-bottom: 12px; }
+    .paths-grid { display: grid; gap: 16px; }
+    @media (min-width: 768px) { .paths-grid { grid-template-columns: repeat(3, 1fr); } }
+    .path-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 24px; position: relative; transition: all 0.3s ease; }
+    .path-card:hover { transform: translateY(-4px); }
+    .path-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; border-radius: 12px 12px 0 0; }
+    .path-card:nth-child(1)::before { background: var(--accent-sage); }
+    .path-card:nth-child(2)::before { background: var(--accent-gold); }
+    .path-card:nth-child(3)::before { background: var(--accent-coral); }
+    .path-prob { font-size: 10px; letter-spacing: 1px; padding: 4px 10px; border-radius: 100px; display: inline-block; margin-bottom: 12px; background: rgba(255,255,255,0.06); color: var(--text-primary); }
+    .path-title { font-family: 'Noto Serif SC', serif; font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+    .path-subtitle { font-size: 12px; color: var(--accent-gold); margin-bottom: 12px; }
+    .path-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.7; }
+    .expert-grid { display: grid; gap: 20px; }
+    .expert-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 16px; padding: 28px; transition: all 0.3s ease; }
+    .expert-card:hover { border-color: var(--border-accent); }
+    .expert-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px; }
+    .expert-title { font-family: 'Noto Serif SC', serif; font-size: 16px; font-weight: 600; }
+    .expert-score { font-size: 11px; padding: 4px 10px; border-radius: 100px; background: rgba(224, 122, 95, 0.15); color: var(--accent-coral); }
+    .expert-text { font-size: 13px; color: var(--text-secondary); line-height: 1.8; }
+    .expert-text p { margin-bottom: 12px; }
+    .trash-section { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 16px; padding: 40px; text-align: center; }
+    .trash-score { font-family: 'Noto Serif SC', serif; font-size: 64px; font-weight: 700; color: var(--accent-gold); letter-spacing: 4px; margin-bottom: 8px; }
+    .trash-label { font-size: 12px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 32px; }
+    .trash-grid { display: grid; gap: 12px; text-align: left; margin-bottom: 32px; }
+    @media (min-width: 768px) { .trash-grid { grid-template-columns: repeat(2, 1fr); } }
+    .trash-item { display: flex; gap: 12px; padding: 16px; background: rgba(255,255,255,0.03); border-radius: 8px; }
+    .trash-indicator { width: 8px; height: 8px; border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
+    .trash-indicator.high { background: #ef4444; }
+    .trash-indicator.medium { background: var(--accent-gold); }
+    .trash-indicator.low { background: var(--accent-sage); }
+    .trash-type { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+    .trash-desc { font-size: 11px; color: var(--text-secondary); line-height: 1.5; }
+    .trash-verdict { font-size: 13px; color: var(--text-secondary); line-height: 1.8; text-align: left; padding-top: 24px; border-top: 1px solid var(--border-subtle); }
+    .trash-verdict strong { color: var(--text-primary); }
+    footer { padding: 60px 24px; text-align: center; border-top: 1px solid var(--border-subtle); }
+    .footer-text { font-size: 11px; color: var(--text-muted); line-height: 2; }
+    code { font-family: 'Space Mono', monospace; background: rgba(255,255,255,0.05); padding: 2px 8px; border-radius: 4px; font-size: 12px; }
+    @media (max-width: 640px) { .stats-grid { grid-template-columns: 1fr; } .character-grid { grid-template-columns: 1fr; } .cp-stats { grid-template-columns: repeat(2, 1fr); } .paths-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <section class="hero">
+    <div class="hero-badge">#婚姻边界 #第三方暧昧 #高风险越界</div>
+    <h1 class="hero-title">他在另一个窗口里说<span class="highlight">“老婆”</span></h1>
+    <div class="hero-line"></div>
+    <p class="hero-sub">关系分析报告</p>
+    <div class="scroll-hint">↓ SCROLL</div>
+  </section>
+
+  <div class="container">
+    <section class="section">
+      <div class="section-header"><div class="section-label">Overview</div><h2 class="section-title">关系总览</h2></div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">关系健康指数</div>
+          <div class="stat-value">31</div>
+          <div class="stat-desc">建立在隐秘与越界上，结构很脆。</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">CP 匹配度</div>
+          <div class="stat-value">73</div>
+          <div class="stat-desc">需求很能对上频道，但未必健康。</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">渣度</div>
+          <div class="stat-value">66</div>
+          <div class="stat-desc">已经不是模糊暧昧，而是实质越界。</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">当前走向</div>
+          <div class="stat-value">48</div>
+          <div class="stat-desc">还在摇摆，取决于下一步证据和动作。</div>
+        </div></div>
+    </section>
+
+    <section class="section">
+      <div class="section-header"><div class="section-label">Story</div><h2 class="section-title">你们的故事</h2></div>
+      <p class="story-text">这不是一段普通的工作往来，而是一条悄悄长出来的第二亲密通道。</p><p class="story-text">表面上看，故事的起点很像常见的商K语境：喝酒、应酬、身体不舒服、有人关心两句。可一旦把几张截图连起来，这种“场面上的热闹”就开始变味。对方不是在做一次性的暧昧试探，而是在一下一下地把他往“可以陪我、可以接我、可以随时来”的位置上推。更关键的是，你老公没有缩回去，反而不断给这个位置供电。</p><p class="story-text">这段关系最危险的地方，不在一句“老公”，也不在一句“老婆”，而在于这些称呼后面跟着的是真实的情绪功能。她说“我更想你陪我”，他没有拉开边界；她说“我现在需要你”，他没有停在安慰，而是往“我现在过来”“我买高铁票”这种行动层面走。到了这一步，关系已经不是嘴上调情，而是在往伴侣分工靠。</p><p class="story-text">如果只看一句话，这还可以被解释成玩笑、酒局气氛、销售手段。但把它放回完整结构里，这更像是一段正在成形的婚外亲密关系：一方负责抛出需求和依赖，另一方负责给回应、给优先级、给到场的可能。真正的问题不是他们说了什么，而是你老公已经在另一个窗口里，活成了一个“可以被召唤的人”。</p>
+    </section>
+
+    <section class="section">
+      <div class="section-header"><div class="section-label">Characters</div><h2 class="section-title">角色登场</h2></div>
+      <div class="character-grid">
+        <div class="character-card">
+          <div class="character-type">老公</div>
+          <h3 class="character-name">边界失守型·夜场救火员</h3>
+          <div class="character-tag">勿扰模式</div>
+          <div class="character-quote">状态是“别打扰我”，但一旦有人把他推到特殊位置，他又会愿意在暗处打开另外一条通道。</div>
+          <p class="character-desc" style="margin-bottom: 20px;">平时看起来像留有距离的人，但只要对方抛出足够强的需求，他就愿意补位，享受那种“只有我能接住你”的位置感。</p>
+          <div class="radar-list">
+            <div class="radar-item"><span class="radar-label">沦陷指数</span><div class="radar-track"><div class="radar-fill" data-width="58"></div></div><span class="radar-value">58</span></div>
+            <div class="radar-item"><span class="radar-label">已读不慌</span><div class="radar-track"><div class="radar-fill" data-width="82"></div></div><span class="radar-value">82</span></div>
+            <div class="radar-item"><span class="radar-label">甲方浓度</span><div class="radar-track"><div class="radar-fill" data-width="79"></div></div><span class="radar-value">79</span></div>
+            <div class="radar-item"><span class="radar-label">开麦纯度</span><div class="radar-track"><div class="radar-fill" data-width="28"></div></div><span class="radar-value">28</span></div>
+            <div class="radar-item"><span class="radar-label">结界强度</span><div class="radar-track"><div class="radar-fill" data-width="74"></div></div><span class="radar-value">74</span></div>
+            <div class="radar-item"><span class="radar-label">氪金段位</span><div class="radar-track"><div class="radar-fill" data-width="61"></div></div><span class="radar-value">61</span></div>
+            <div class="radar-item"><span class="radar-label">显微体质</span><div class="radar-track"><div class="radar-fill" data-width="46"></div></div><span class="radar-value">46</span></div>
+            <div class="radar-item"><span class="radar-label">多巴浓度</span><div class="radar-track"><div class="radar-fill" data-width="71"></div></div><span class="radar-value">71</span></div></div>
+          <p class="character-desc"><strong>核心驱动力：</strong>被需要、被依赖、在另一个人的情绪系统里拥有特殊席位。</p>
+          <p class="character-desc"><strong>习惯性反应：</strong>先不把话说死，先把人接住；先给到情绪价值，再看是否往线下推进。</p>
+          <p class="character-desc"><strong>隐藏恐惧：</strong>失去自己在别人心里的重要性，或者被一个明确关系绑定后失去游走空间。</p>
+          <p class="character-desc"><strong>暗面翻转：</strong>责任逃避者 · 双轨补位</p>
+        </div>
+        <div class="character-card">
+          <div class="character-type">聊天对象</div>
+          <h3 class="character-name">依赖型·临时港口寻找者</h3>
+          <div class="character-tag">人形挂件</div>
+          <div class="character-quote">一旦情绪上来了，就会本能地抓住眼前那个能回应自己的人，不太在意这份回应背后已经越过了什么边界。</div>
+          <p class="character-desc" style="margin-bottom: 20px;">会在孤独、脆弱、想被陪的时候迅速把一个人推到核心位置，希望对方立刻成为自己的情绪港口。</p>
+          <div class="radar-list">
+            <div class="radar-item"><span class="radar-label">沦陷指数</span><div class="radar-track"><div class="radar-fill" data-width="84"></div></div><span class="radar-value">84</span></div>
+            <div class="radar-item"><span class="radar-label">已读不慌</span><div class="radar-track"><div class="radar-fill" data-width="22"></div></div><span class="radar-value">22</span></div>
+            <div class="radar-item"><span class="radar-label">甲方浓度</span><div class="radar-track"><div class="radar-fill" data-width="34"></div></div><span class="radar-value">34</span></div>
+            <div class="radar-item"><span class="radar-label">开麦纯度</span><div class="radar-track"><div class="radar-fill" data-width="68"></div></div><span class="radar-value">68</span></div>
+            <div class="radar-item"><span class="radar-label">结界强度</span><div class="radar-track"><div class="radar-fill" data-width="18"></div></div><span class="radar-value">18</span></div>
+            <div class="radar-item"><span class="radar-label">氪金段位</span><div class="radar-track"><div class="radar-fill" data-width="73"></div></div><span class="radar-value">73</span></div>
+            <div class="radar-item"><span class="radar-label">显微体质</span><div class="radar-track"><div class="radar-fill" data-width="79"></div></div><span class="radar-value">79</span></div>
+            <div class="radar-item"><span class="radar-label">多巴浓度</span><div class="radar-track"><div class="radar-fill" data-width="83"></div></div><span class="radar-value">83</span></div></div>
+          <p class="character-desc"><strong>核心驱动力：</strong>立刻有人陪、立刻有人回、立刻有人证明“我对你是特殊的”。</p>
+          <p class="character-desc"><strong>习惯性反应：</strong>先表达不舒服、孤单或想见面，再把情绪通道推到更亲密的位置。</p>
+          <p class="character-desc"><strong>隐藏恐惧：</strong>自己需要人的时候，没有人真的出现。</p>
+          
+        </div></div>
+      <div class="cp-card">
+        <div class="cp-header"><h3 class="cp-title">💫 你们的 CP 档案</h3><span class="cp-badge">#失衡型 #补位型 #隐秘关系</span></div>
+        <div class="cp-stats">
+          <div class="cp-stat"><div class="cp-stat-value">36</div><div class="cp-stat-label">沦陷平衡</div></div>
+          <div class="cp-stat"><div class="cp-stat-value">31</div><div class="cp-stat-label">已读共振</div></div>
+          <div class="cp-stat"><div class="cp-stat-value">77</div><div class="cp-stat-label">甲方博弈</div></div>
+          <div class="cp-stat"><div class="cp-stat-value">58</div><div class="cp-stat-label">开麦翻译</div></div>
+          <div class="cp-stat"><div class="cp-stat-value">18</div><div class="cp-stat-label">结界协商</div></div></div>
+        <div class="cp-quote"><div class="cp-quote-label">CP 金句</div>“我现在需要你。”<br><br>只要这条关系继续靠“我需要你”和“我现在过来”来推进，它就会从暧昧滑向更扎实的婚外亲密。</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header"><div class="section-label">Trajectory</div><h2 class="section-title">剧情走向</h2></div>
+      <div class="paths-grid">
+        <div class="path-card">
+          <span class="path-prob">12%</span>
+          <h3 class="path-title">线路 1：及时刹车，回到边界内</h3>
+          <div class="path-subtitle">最佳</div>
+          <p class="path-desc">调性：最佳 达成条件：你老公主动切断这条关系，不再接受伴侣式称呼，不再提供婚外优先响应，并愿意面对婚内后果 关键转折点：他不是删聊天，而是真正停止“我来接你”“我过去找你”这种补位行为</p>
+        </div>
+        <div class="path-card">
+          <span class="path-prob">18%</span>
+          <h3 class="path-title">线路 2：表面降温，转入更隐蔽的联系</h3>
+          <div class="path-subtitle">较好</div>
+          <p class="path-desc">调性：较好 达成条件：被发现后双方收敛称呼和文字，把关系从明面暧昧改成低频私下维持 关键转折点：他开始强调“没什么”，但联系方式、见面通道、求助通道没有真正切断</p>
+        </div>
+        <div class="path-card">
+          <span class="path-prob">34%</span>
+          <h3 class="path-title">线路 3：保持暧昧，直到下一次召唤</h3>
+          <div class="path-subtitle">现实</div>
+          <p class="path-desc">调性：现实 目前最像的一条线：对方继续把他当成特殊联系人，你老公继续在关键节点补位，关系不上名分，但也不退出 风险时间点：出差、酒局、节假日、深夜、对方身体不舒服或情绪低潮的时候</p>
+        </div>
+        <div class="path-card">
+          <span class="path-prob">21%</span>
+          <h3 class="path-title">线路 4：从情绪陪伴升级到固定线下见面</h3>
+          <div class="path-subtitle">较差</div>
+          <p class="path-desc">调性：较差 触发条件：高铁票、车程、酒店、打车、转账这些动作开始落地，关系从聊天窗口进入稳定线下 早期信号：已经出现“我现在过来”“我买高铁票”这种行动承诺</p>
+        </div>
+        <div class="path-card">
+          <span class="path-prob">15%</span>
+          <h3 class="path-title">线路 5：双线失控，婚内爆炸</h3>
+          <div class="path-subtitle">最坏</div>
+          <p class="path-desc">调性：最坏 触发条件：第三方要求更明确的位置，你老公又舍不得切；婚内这边发现更多实锤，双方正式对撞 早期信号：伴侣称呼越来越自然，线下奔赴越来越顺手，对婚内的解释越来越防御</p>
+        </div></div>
+    </section>
+
+    <section class="section">
+      <div class="section-header"><div class="section-label">Analysis</div><h2 class="section-title">专家怎么看</h2></div>
+      <div class="expert-grid">
+        <div class="expert-card">
+          <div class="expert-header">
+            <h3 class="expert-title">依恋模式分析</h3>
+            <span class="expert-score">Amir Levine | 哥伦比亚大学精神科医生 · 神经科学家 · 依恋安全指数：29/100</span>
+          </div>
+          <div class="expert-text"><p>从依恋系统角度看，这段互动最醒目的不是“暧昧”两个字，而是伴侣功能已经发生转移。对方并不是在做普通社交联络，而是在把你老公当成一个可随时调动的情绪对象。证据非常直接：<code>“我想去吃火锅没有人陪我，但是我更想你陪我”</code>、<code>“我现在需要你”</code>、<code>“你在就好了”</code>。这些都不是工作语言，而是依恋系统被激活后的靠近行为。</p>
+<p>你老公这边，材料不足以让我高置信度钉死完整依恋类型，但低置信度上更像<code>回避倾向中的选择性可用</code>。意思是，他不一定愿意公开承担关系定义，却愿意在婚外关系里提供关键时刻的可用性。<code>“晚安，老婆”</code>和<code>“我现在过来”“我买高铁票”</code>说明他并非被动接收，而是在主动供给伴侣感。</p>
+<p>这对组合更像低置信度的<code>焦虑-回避补位循环</code>：一方靠近得很快，一方不定义关系，但会在关键时刻出现。这样的关系通常刺激感强，稳定性弱。它最能制造“你看，他还是会来的”这种错觉，但它提供的不是健康依赖，而是隐秘依赖。按 CARRP 去看，这条关系在“可用性”上得分不低，但在“一致性、可靠性、可预测性”上都偏低，所以它会让人越来越依赖，却不可能带来真正的安全感。</p></div>
+        </div>
+        <div class="expert-card">
+          <div class="expert-header">
+            <h3 class="expert-title">关系根源分析</h3>
+            <span class="expert-score">武志红 | 北大心理学硕士 · 心理学写作者 · 关系成熟度：24/100</span>
+          </div>
+          <div class="expert-text"><p>这段关系的表面脚本是“她需要他，他去安慰她”，更深一层的脚本其实是“他在婚外找到一种被需要、被依赖、被确认的位置”。很多人会把这类越界解释成环境复杂、异性会撩、工作中难免。但更深一点看，真正让关系成立的从来不是外界诱惑，而是当事人内心对某种位置的需要。</p>
+<p>你老公在这条关系里拿到的，很可能不是单纯性，而是一种更难戒的东西：我是重要的、我是特殊的、我一出现就能解决问题。对方则在这段关系里拿到即时安抚和即时补位。于是这不是简单的调情，而是一场双向供需：她供应被需要的机会，他供应可以依赖的错觉。</p>
+<p>从权力结构看，这段关系并不平等。表面上是对方在求助，实际上节奏掌握在你老公手里，因为他决定什么时候回、回到什么程度、去不去、去多远。也正因为如此，他很容易在道德上给自己留退路：把自己讲成“只是顺手安慰一下的人”，而不是“在经营第二条亲密通道的人”。这就是这段关系最核心的成熟度问题：它不敢承认自己的真相，却又在行为上不断往真相靠近。</p></div>
+        </div>
+        <div class="expert-card">
+          <div class="expert-header">
+            <h3 class="expert-title">你没看到的真相</h3>
+            <span class="expert-score">曾奇峰 | 精神分析取向咨询师 · 自我觉察度：35/100</span>
+          </div>
+          <div class="expert-text"><p>如果把这个案例只看成“一个女的很会撩”，你会错过真正的重心。真正的问题不是她说了什么，而是你老公为什么愿意接这个剧本。这里面最典型的合理化故事会是：<code>她只是客户</code>、<code>她状态不好</code>、<code>做销售没办法</code>。这些说法未必全是假话，但它们会被用来遮住更核心的事实：他已经把本该留在婚内的一部分情绪位置，分给了婚外的人。</p>
+<p>这里面可以看到几个很典型的防御机制。第一是<code>分割</code>：把“婚内的我”和“窗口里的我”分成两个人，好像同一个人可以在不同场景里做不同规则的自己。第二是<code>否认</code>：不承认这已经构成边界越界，只承认“聊天有点过”。第三是<code>合理化</code>：用职业环境、酒局氛围、客户关系给自己的主动参与找台阶。</p>
+<p>一句犀利但温和的话是：这不是有人硬把他拖进来，而是他在享受自己被拖进去的感觉。真正需要看清的，不是谁更坏，而是谁在拿模糊关系满足自己不愿正面承担的欲望。</p></div>
+        </div>
+        <div class="expert-card">
+          <div class="expert-header">
+            <h3 class="expert-title">个人疗愈方向</h3>
+            <span class="expert-score">Nicole LePera | 临床心理学家 · 整体心理学倡导者 · 情绪健康度：31/100</span>
+          </div>
+          <div class="expert-text"><p>对你这个求助者来说，最重要的不是立刻得出所有答案，而是先看见你自己的神经系统现在正处在什么状态。发现伴侣有第三方高亲密聊天时，最常见的反应不是单一愤怒，而是<code>战斗 + 冻结</code>混合：一边很想马上摊牌、马上撕开，一边又会反复怀疑自己是不是证据不够、是不是会被反咬成多疑。</p>
+<p>所以这一步最有用的不是“你要冷静”，而是具体边界动作。第一，先留证，不急着把底牌一次性翻光。第二，把你想确认的事实拆开：车票、通话、酒店、转账、定位、聊天前后文，分别去看。第三，给自己一个对质前的底线：你不是去求一个模糊态度，而是去确认事实和边界。</p>
+<p>如果这件事最后进入婚内修复，真正的疗愈方向也不是“逼自己大度”，而是把安全感重新从“他说没事就没事”拿回来，转成“我能看证据、我能设边界、我能决定自己接不接受这个结果”。这是你从被动受击，回到主体位置的关键。</p></div>
+        </div>
+        <div class="expert-card">
+          <div class="expert-header">
+            <h3 class="expert-title">关系健康体检</h3>
+            <span class="expert-score">John Gottman | 华盛顿大学心理学荣誉教授 · 戈特曼研究所联合创始人 · 关系稳定度：18/100</span>
+          </div>
+          <div class="expert-text"><p>这份素材不是夫妻双方的完整对话，所以无法按标准完整运行四骑士和 5:1 正负比分析。但即使如此，有两件事已经足够明确。第一，这段关系的稳定度非常低，因为它建立在秘密和补位上，而不是公开规则和可持续承诺上。第二，这件事对婚姻的伤害已经发生，不需要等到“承认上床”才成立。</p>
+<p>从关系之家模型看，最先受损的是“信任”和“承诺”两面墙。伴侣式称呼、伴侣式安抚、伴侣式优先响应，已经流向了第三方。哪怕暂时还没有更多线下实锤，这也足够说明婚姻边界已经出现结构性裂缝。对被发现的一方来说，后面最常出现的不是坦白，而是防御：减少表面证据、模糊关系定义、把问题缩小成“只是聊得近一点”。如果后续真走到对质阶段，这种防御会成为婚内修复最大的障碍。</p></div>
+        </div>
+        <div class="expert-card">
+          <div class="expert-header">
+            <h3 class="expert-title">关系的更大图景</h3>
+            <span class="expert-score">Esther Perel | 比利时裔心理治疗师 · 关系研究者 · 关系活力度：62/100</span>
+          </div>
+          <div class="expert-text"><p>如果只问“这算不算出轨”，答案会很快，但还不够完整。更大的图景是：你老公在婚外并不只是找一个人聊天，他在找一种和婚内不同的位置感。这里面有新鲜感、隐秘感、被需要感，也有一种“我在另一个世界里还是有活力的”感觉。所以这条关系的活力度反而不低，正因为它建立在秘密、召唤和想象上。</p>
+<p>但高活力不等于高价值。很多婚外关系最迷人的地方，恰恰来自它不用承担白天的现实成本。她可以在最需要的时候出现需求，他可以在最上头的时候给出奔赴承诺，双方都暂时不必回答“这段关系在现实里到底算什么”。这也是为什么它会让人误以为自己遇到了更懂自己的人。实际上，他们享受的是一个高刺激、低责任、低可见性的关系装置。</p>
+<p>所以最后的重新框架不是“她是不是比你更好”，也不是“他到底爱谁”，而是：他是否已经把秘密的亲密、欲望的投射、特殊的优先权，放到了婚姻之外。按这个标准，这件事已经不只是风险，而是高概率的情感出轨。肉体是否成立，还需要硬证据；但婚姻边界已经被突破，这一点不需要再等更多解释。</p>
+<p>最终鉴定：🟠警惕区</p>
+<p>命中类型：责任逃避者（中等置信度）</p>
+<p>一句话结论：不是简单口嗨，而是已婚状态下主动经营第二条亲密通道，同时给自己留好了“我没真怎么样”的退路。</p>
+<p>证据拆解：</p>
+<p>1. <strong>通信模式</strong>    - 对方在需要陪伴和身体不舒服时优先找他：<code>“我现在需要你”</code>    - 对方把他放进高优先级情绪联系人位置：<code>“你在就好了”</code></p>
+<p>2. <strong>语言模式</strong>    - 明确伴侣式称呼：<code>“老公”</code>、<code>“晚安，老婆”</code>    - 明确情感偏向：<code>“我想去吃火锅没有人陪我，但是我更想你陪我”</code></p>
+<p>3. <strong>行为模式</strong>    - 已经从语言安抚走向行动承诺：<code>“我现在过来”</code>、<code>“我买高铁票”</code>    - 说明他不是只享受暧昧氛围，而是在测试或推动关系落地</p>
+<p>为什么不是 🔴 危险区： 因为目前还没有多人并行、酒店记录、转账记录、成行凭证、持续线下见面的完整证据。按项目规则，证据不充分时要降级，不把最重结论硬往上扣。</p>
+<p>为什么也绝对不是 🟡 注意区： 因为“老公/老婆”加“我现在需要你”加“我买高铁票”这组组合，已经远远超出普通客户关系、普通异性朋友和一般社交暧昧的范围。它不是边界模糊，而是边界正在被持续使用和消耗。</p></div>
+        </div></div>
+    </section>
+
+    <section class="section">
+      <div class="section-header"><div class="section-label">Verdict</div><h2 class="section-title">渣度鉴定</h2></div>
+      <div class="trash-section">
+        <div class="trash-score">66</div>
+        <div class="trash-label">🟠警惕</div>
+        <div class="trash-grid">
+          <div class="trash-item">
+            <div class="trash-indicator medium"></div>
+            <div class="trash-content">
+              <div class="trash-type">通信模式</div>
+              <div class="trash-desc">- 对方在需要陪伴和身体不舒服时优先找他：“我现在需要你”    - 对方把他放进高优先级情绪联系人位置：“你在就好了”</div>
+            </div>
+          </div>
+          <div class="trash-item">
+            <div class="trash-indicator medium"></div>
+            <div class="trash-content">
+              <div class="trash-type">语言模式</div>
+              <div class="trash-desc">- 明确伴侣式称呼：“老公”、“晚安，老婆”    - 明确情感偏向：“我想去吃火锅没有人陪我，但是我更想你陪我”</div>
+            </div>
+          </div>
+          <div class="trash-item">
+            <div class="trash-indicator high"></div>
+            <div class="trash-content">
+              <div class="trash-type">行为模式</div>
+              <div class="trash-desc">- 已经从语言安抚走向行动承诺：“我现在过来”、“我买高铁票”    - 说明他不是只享受暧昧氛围，而是在测试或推动关系落地  为什么不是 🔴 危险区： 因为目前还没有多人并行、酒店记录、转账记录、成行凭证、持续线下见面的完整证据。按项目规则，证据不充分时要降级，不把最重结论硬往...</div>
+            </div>
+          </div></div>
+        <div class="trash-verdict"><strong>🟠警惕区</strong><br><br><strong>命中类型：</strong>责任逃避者（中等置信度）<br><br><p>从依恋系统角度看，这段互动最醒目的不是“暧昧”两个字，而是伴侣功能已经发生转移。对方并不是在做普通社交联络，而是在把你老公当成一个可随时调动的情绪对象。证据非常直接：<code>“我想去吃火锅没有人陪我，但是我更想你陪我”</code>、<code>“我现在需要你”</code>、<code>“你在就好了”</code>。这些都不是工作语言，而是依恋系统被激活后的靠近行为。</p>
+<p>你老公这边，材料不足以让我高置信度钉死完整依恋类型，但低置信度上更像<code>回避倾向中的选择性可用</code>。意思是，他不一定愿意公开承担关系定义，却愿意在婚外关系里提供关键时刻的可用性。<code>“晚安，老婆”</code>和<code>“我现在过来”“我买高铁票”</code>说明他并非被动接收，而是在主动供给伴侣感。</p>
+<p>这对组合更像低置信度的<code>焦虑-回避补位循环</code>：一方靠近得很快，一方不定义关系，但会在关键时刻出现。这样的关系通常刺激感强，稳定性弱。它最能制造“你看，他还是会来的”这种错觉，但它提供的不是健康依赖，而是隐秘依赖。按 CARRP 去看，这条关系在“可用性”上得分不低，但在“一致性、可靠性、可预测性”上都偏低，所以它会让人越来越依赖，却不可能带来真正的安全感。</p>
+<p>这段关系的表面脚本是“她需要他，他去安慰她”，更深一层的脚本其实是“他在婚外找到一种被需要、被依赖、被确认的位置”。很多人会把这类越界解释成环境复杂、异性会撩、工作中难免。但更深一点看，真正让关系成立的从来不是外界诱惑，而是当事人内心对某种位置的需要。</p>
+<p>你老公在这条关系里拿到的，很可能不是单纯性，而是一种更难戒的东西：我是重要的、我是特殊的、我一出现就能解决问题。对方则在这段关系里拿到即时安抚和即时补位。于是这不是简单的调情，而是一场双向供需：她供应被需要的机会，他供应可以依赖的错觉。</p>
+<p>从权力结构看，这段关系并不平等。表面上是对方在求助，实际上节奏掌握在你老公手里，因为他决定什么时候回、回到什么程度、去不去、去多远。也正因为如此，他很容易在道德上给自己留退路：把自己讲成“只是顺手安慰一下的人”，而不是“在经营第二条亲密通道的人”。这就是这段关系最核心的成熟度问题：它不敢承认自己的真相，却又在行为上不断往真相靠近。</p>
+<p>如果把这个案例只看成“一个女的很会撩”，你会错过真正的重心。真正的问题不是她说了什么，而是你老公为什么愿意接这个剧本。这里面最典型的合理化故事会是：<code>她只是客户</code>、<code>她状态不好</code>、<code>做销售没办法</code>。这些说法未必全是假话，但它们会被用来遮住更核心的事实：他已经把本该留在婚内的一部分情绪位置，分给了婚外的人。</p>
+<p>这里面可以看到几个很典型的防御机制。第一是<code>分割</code>：把“婚内的我”和“窗口里的我”分成两个人，好像同一个人可以在不同场景里做不同规则的自己。第二是<code>否认</code>：不承认这已经构成边界越界，只承认“聊天有点过”。第三是<code>合理化</code>：用职业环境、酒局氛围、客户关系给自己的主动参与找台阶。</p>
+<p>一句犀利但温和的话是：这不是有人硬把他拖进来，而是他在享受自己被拖进去的感觉。真正需要看清的，不是谁更坏，而是谁在拿模糊关系满足自己不愿正面承担的欲望。</p>
+<p>对你这个求助者来说，最重要的不是立刻得出所有答案，而是先看见你自己的神经系统现在正处在什么状态。发现伴侣有第三方高亲密聊天时，最常见的反应不是单一愤怒，而是<code>战斗 + 冻结</code>混合：一边很想马上摊牌、马上撕开，一边又会反复怀疑自己是不是证据不够、是不是会被反咬成多疑。</p>
+<p>所以这一步最有用的不是“你要冷静”，而是具体边界动作。第一，先留证，不急着把底牌一次性翻光。第二，把你想确认的事实拆开：车票、通话、酒店、转账、定位、聊天前后文，分别去看。第三，给自己一个对质前的底线：你不是去求一个模糊态度，而是去确认事实和边界。</p>
+<p>如果这件事最后进入婚内修复，真正的疗愈方向也不是“逼自己大度”，而是把安全感重新从“他说没事就没事”拿回来，转成“我能看证据、我能设边界、我能决定自己接不接受这个结果”。这是你从被动受击，回到主体位置的关键。</p>
+<p>这份素材不是夫妻双方的完整对话，所以无法按标准完整运行四骑士和 5:1 正负比分析。但即使如此，有两件事已经足够明确。第一，这段关系的稳定度非常低，因为它建立在秘密和补位上，而不是公开规则和可持续承诺上。第二，这件事对婚姻的伤害已经发生，不需要等到“承认上床”才成立。</p>
+<p>从关系之家模型看，最先受损的是“信任”和“承诺”两面墙。伴侣式称呼、伴侣式安抚、伴侣式优先响应，已经流向了第三方。哪怕暂时还没有更多线下实锤，这也足够说明婚姻边界已经出现结构性裂缝。对被发现的一方来说，后面最常出现的不是坦白，而是防御：减少表面证据、模糊关系定义、把问题缩小成“只是聊得近一点”。如果后续真走到对质阶段，这种防御会成为婚内修复最大的障碍。</p>
+<p>如果只问“这算不算出轨”，答案会很快，但还不够完整。更大的图景是：你老公在婚外并不只是找一个人聊天，他在找一种和婚内不同的位置感。这里面有新鲜感、隐秘感、被需要感，也有一种“我在另一个世界里还是有活力的”感觉。所以这条关系的活力度反而不低，正因为它建立在秘密、召唤和想象上。</p>
+<p>但高活力不等于高价值。很多婚外关系最迷人的地方，恰恰来自它不用承担白天的现实成本。她可以在最需要的时候出现需求，他可以在最上头的时候给出奔赴承诺，双方都暂时不必回答“这段关系在现实里到底算什么”。这也是为什么它会让人误以为自己遇到了更懂自己的人。实际上，他们享受的是一个高刺激、低责任、低可见性的关系装置。</p>
+<p>所以最后的重新框架不是“她是不是比你更好”，也不是“他到底爱谁”，而是：他是否已经把秘密的亲密、欲望的投射、特殊的优先权，放到了婚姻之外。按这个标准，这件事已经不只是风险，而是高概率的情感出轨。肉体是否成立，还需要硬证据；但婚姻边界已经被突破，这一点不需要再等更多解释。</p></div>
+      </div>
+    </section>
+  </div>
+
+  <footer><p class="footer-text">本报告由 Relationship-Analyzer 生成 · 所有判断均受素材充分度限制</p></footer>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.radar-fill').forEach((fill, index) => {
+        setTimeout(() => {
+          fill.style.width = fill.dataset.width + '%';
+        }, 160 + index * 60);
+      });
+    });
+  </script>
+</body>
+</html>
